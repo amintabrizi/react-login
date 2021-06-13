@@ -1,56 +1,117 @@
-import * as Types from '../types';
+import * as Types from "../types";
 
 import AuthService from "../../services/auth.service";
 
-export const register = (username, email, password) => (dispatch) => {
-    return AuthService.register(username, email, password).then(
-        (response) => {
+export const registerAction = (firstName, lastName, email, password) => (dispatch) => {
+  console.log(firstName, lastName, email, password);
+  return AuthService.register(firstName, lastName, email, password).then(
+    (response) => {
+      dispatch({
+        type: Types.REGISTER_SUCCESS,
+      });
 
-            dispatch({
-                type: Types.REGISTER_SUCCESS,
-            });
+      dispatch({
+        type: Types.SET_MESSAGE,
+        payload: response.data.message,
+      });
 
-            dispatch({
-                type: Types.SET_MESSAGE,
-                payload: response.data.message,
-            });
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-            return Promise.resolve();
-        },
-        (error) => {
+      dispatch({
+        type: Types.REGISTER_FAIL,
+      });
 
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
+      dispatch({
+        type: Types.SET_MESSAGE,
+        payload: message,
+      });
 
-            dispatch({
-                type: Types.REGISTER_FAIL,
-            });
-
-            dispatch({
-                type: Types.SET_MESSAGE,
-                payload: message,
-            });
-
-
-            return Promise.reject();
-        }
-    );
+      return Promise.reject();
+    }
+  );
 };
 
-// export const toggleLoginAction = () => dispatch => {
-//     dispatch(showLoading())
-//     setTimeout(() => {
-//         dispatch({type: types.TOGGLE_LOGIN});
-//         dispatch(hideLoading())
-//     }, 1000);
-    
-// }
+export const verifyEmailAction = (token) => (dispatch) => {
+  return AuthService.verifyEmail(token).then(
+    (response) => {
+      dispatch({
+        type: Types.VERIFY_SUCCESS,
+      });
 
-// export const toastCloseAction = (showStatus, toastTitle, toastBody, toastBg) => ({
-//     type: types.HANDLE_TOAST_CLOSE,
-// })
+      dispatch({
+        type: Types.SET_MESSAGE,
+        payload: response.data.message,
+      });
 
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: Types.VERIFY_FAIL,
+      });
+
+      dispatch({
+        type: Types.SET_MESSAGE,
+        payload: message,
+      });
+
+      return Promise.reject();
+    }
+  );
+};
+
+export const login = (username, password) => (dispatch) => {
+  console.log(username, password);
+  return AuthService.login(username, password).then(
+    (data) => {
+      dispatch({
+        type: Types.LOGIN_SUCCESS,
+        payload: { user: data },
+      });
+
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: Types.LOGIN_FAIL,
+      });
+
+      dispatch({
+        type: Types.SET_MESSAGE,
+        payload: message,
+      });
+
+      return Promise.reject();
+    }
+  );
+};
+
+export const logout = () => (dispatch) => {
+  AuthService.logout();
+
+  dispatch({
+    type: Types.LOGOUT,
+  });
+};

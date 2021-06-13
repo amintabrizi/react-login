@@ -1,8 +1,8 @@
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
+import { connect } from "react-redux";
 
-  
-export default function Header(props) {
+function Header(props) {
   return (
     <>
       <Navbar bg="dark" variant="dark">
@@ -12,15 +12,33 @@ export default function Header(props) {
             <li className="nav-item">
               <NavLink exact className="nav-link" to="/" activeClassName="selected active">Home</NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/profile">profile</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/login">login</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/register">register</NavLink>
-            </li>
+            {
+              (props.isLoggedIn)
+                ?
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/dashboard">dashboard</NavLink>
+                </li>
+                :
+                ''
+            }
+            {
+              (!props.isLoggedIn)
+                ?
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/login">login</NavLink>
+                </li>
+                :
+                ''
+            }
+            {
+              (!props.isLoggedIn)
+                ?
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/register">register</NavLink>
+                </li>
+                :
+                ''
+            }
           </Nav>
         </Container>
       </Navbar>
@@ -28,3 +46,11 @@ export default function Header(props) {
   )
 }
 
+function mapStateToProps(state) {
+  const { isLoggedIn } = state.auth;
+  return {
+    isLoggedIn
+  };
+}
+
+export default connect(mapStateToProps)(Header);

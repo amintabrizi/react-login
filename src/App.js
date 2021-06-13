@@ -6,9 +6,11 @@ import {
 
 //components
 import Header from './components/header';
+import Home from './pages/home';
 import Register from './pages/register';
-import Confirm from './pages/confirm';
-
+import VerifyEmail from './pages/verifyEmail';
+import Login from './pages/login';
+import Dashboard from './pages/dashboard';
 
 function App() {
   return (
@@ -16,17 +18,15 @@ function App() {
       <div className="App">
         <Header />
         <main>
-          <Route path="/" exact >
-            <div className="d-flex min-vh-100 justify-content-center align-items-center">
-              this is home page
-            </div>
-          </Route>
+          <Route path="/" exact component={Home} />
           <Route path="/register" component={Register} />
-          <Route path="/confirm" component={Confirm} />
+          <Route path="/verify-email" component={VerifyEmail} />
+          <Route path="/login" component={Login} />
+          <Route path="/dashboard" component={Dashboard} />
         </main>
       </div>
     </Router>
-    
+
   );
 }
 
